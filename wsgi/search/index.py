@@ -29,10 +29,12 @@ schema = Schema(
 
 
 if __name__ == '__main__':
+	bar = Bar('Progress (10k)')
 	with gzip.open(os.path.join(resources,'informations.txt.gz'), 'r') as file:
 		with create_in(index_dir, schema).writer() as writer:
 			sentence = ''
-			for line in file:
+			for i, line in enumerate(file):
+				if i and not i % 10000: bar.next()
 				line = line.strip().decode('utf8')
 				if line.startswith('#'):
 					sentence = line[2:]

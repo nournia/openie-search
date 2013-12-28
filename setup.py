@@ -12,6 +12,7 @@ setup(name='baaz-search',
 		'Werkzeug==0.9.4',
 		'gunicorn==18.0',
 		'Whoosh==2.5.6',
-		'hazm==0.1'
+		'hazm==0.1',
+		'progress=1.2'
 	],
 )
