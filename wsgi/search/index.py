@@ -12,7 +12,7 @@ resources = os.environ['OPENSHIFT_DATA_DIR']
 index_dir = os.path.join(resources,'index')
 
 lemmatizer = Lemmatizer()
-def lemmatize(w): return lemmatizer.lemmatize(w)
+def lemmatize(w): return lemmatizer.lemmatize(w.replace('_', ' '))
 analyzer = StemmingAnalyzer(stemfn=lemmatize)
 schema = Schema(
 	argument0=TEXT(stored=True, analyzer=analyzer),

@@ -16,8 +16,7 @@ def search():
 		abort(400)
 
 	query = map(normalizer.normalize, (request.form['argument0'], request.form['argument1'], request.form['relation']))
-	results = find_informations(*query)
-	return json.dumps(map(dict, results), ensure_ascii=False)
+	return json.dumps(find_informations(*query), ensure_ascii=False)
 
 
 @app.route('/')
