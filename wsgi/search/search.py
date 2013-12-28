@@ -5,7 +5,7 @@ from whoosh.index import open_dir
 from whoosh.qparser import QueryParser
 from hazm import word_tokenize
 
-searcher = open_dir(index_dir).searcher()
+searcher = open_dir(index_dir, schema=schema).searcher()
 parser = QueryParser('', schema)
 qtokens = lambda field, phrase: [field+ word for word in word_tokenize(phrase) if word]
 

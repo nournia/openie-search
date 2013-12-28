@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import json
 from flask import Flask, request, abort
 from hazm import Normalizer
-from index import LemmaFilter
 from search import find_informations
 
 
