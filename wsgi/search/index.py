@@ -8,7 +8,7 @@ from hazm import word_tokenize, Lemmatizer
 from progress.bar import Bar
 
 
-resources = '../../data'
+resources = os.environ['OPENSHIFT_DATA_DIR']
 index_dir = os.path.join(resources,'index')
 
 lemmatizer = Lemmatizer()
