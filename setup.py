@@ -13,6 +13,6 @@ setup(name='baaz-search',
 		'gunicorn==18.0',
 		'Whoosh==2.5.6',
 		'hazm==0.1',
-		'progress=1.2'
+		'progress==1.2'
 	],
 )
