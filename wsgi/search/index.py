@@ -1,6 +1,6 @@
 
 from __future__ import unicode_literals, print_function
-import os, gzip
+import os, gzip, codecs, shelve
 from whoosh.index import create_in
 from whoosh.fields import *
 from whoosh.analysis.analyzers import StemmingAnalyzer
@@ -21,18 +21,46 @@ schema = Schema(
 	sentence=STORED)
 
 
-if __name__ == '__main__':
-	bar = Bar('Progress (10k)')
+def get_informations():
+	bar = Bar('Progress (100k)')
 	with gzip.open(os.path.join(resources,'informations.txt.gz'), 'r') as file:
-		with create_in(index_dir, schema).writer() as writer:
-			sentence = ''
-			for i, line in enumerate(file):
-				if i and not i % 10000: bar.next()
-				line = line.strip().decode('utf8')
-				if line.startswith('#'):
-					sentence = line[2:]
-				elif line:
-					information = line.split(' - ')
-					if len(information) == 3:
-						writer.add_document(argument0=information[0], argument1=information[1], relation=information[2], sentence=sentence)
-					# else: print('invalid:', line)
+		sentence, informations = '', []
+		for i, line in enumerate(file):
+			if i and not i % 100000: bar.next()
+			line = line.strip().decode('utf8')
+			if line.startswith('#'):
+				if informations:
+					yield sentence, informations
+					informations = []
+				sentence = line[2:]
+			elif line:
+				information = line.split(' - ')
+				if len(information) == 3:
+					informations.append(information)
+				# else: print('invalid:', line)
+
+
+def get_frequents():
+	filename = os.path.join(resources,'frequents.txt')
+	if os.path.isfile(filename):
+		return set(codecs.open(filename, encoding='utf8').read().split('\n'))
+	else:
+		counts = shelve.open(filename +'.counts', flag='n')
+		for _, informations in get_informations():
+			for item in set(sum(informations, [])):
+				if item in counts:
+					counts[item] += 1
+				else:
+					counts[item] = 1
+		frequents = set([word for word, count in counts.items() if count >= 3])
+		print(*frequents, sep='\n', file=codecs.open(filename, 'w', 'utf8'))
+		return frequents
+
+
+if __name__ == '__main__':
+	frequents = get_frequents()
+	with create_in(index_dir, schema).writer() as writer:
+		for sentence, informations in get_informations():
+			for information in informations:
+				if information[0] in frequents and information[1] in frequents and information[2] in frequents:
+					writer.add_document(argument0=information[0], argument1=information[1], relation=information[2], sentence=sentence)
