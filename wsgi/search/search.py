@@ -14,4 +14,5 @@ def find_informations(argument0, argument1, relation):
 	parts = qtokens('argument0:', argument0) + qtokens('argument1:', argument1) + qtokens('relation:', relation)
 	query = parser.parse(' '.join(parts))
 	results = searcher.search(query, limit=100)
-	return {'results': map(dict, results), 'hits': len(results)}
+	hits = len(results) if results.has_exact_length() else results.estimated_length()
+	return {'results': map(dict, results), 'hits': hits}
