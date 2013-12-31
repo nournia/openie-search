@@ -43,7 +43,14 @@ def get_informations():
 def get_frequents():
 	filename = os.path.join(resources,'frequents.txt')
 	if os.path.isfile(filename):
-		return set(codecs.open(filename, encoding='utf8').read().split('\n'))
+		frequents = set(codecs.open(filename, encoding='utf8').read().split('\n'))
+
+		filename = os.path.join(resources,'exceptions.txt')
+		if os.path.isfile(filename):
+			for item in set(codecs.open(filename, encoding='utf8').read().split('\n')):
+				frequents.remove(item)
+
+		return frequents
 	else:
 		counts = shelve.open(filename +'.counts')
 		for _, informations in get_informations():
