@@ -45,16 +45,21 @@ def get_frequents():
 	if os.path.isfile(filename):
 		return set(codecs.open(filename, encoding='utf8').read().split('\n'))
 	else:
-		counts = shelve.open(filename +'.counts', flag='n')
+		counts = shelve.open(filename +'.counts')
 		for _, informations in get_informations():
 			for item in set(sum(informations, [])):
-				if item in counts:
-					counts[item] += 1
-				else:
-					counts[item] = 1
-		frequents = set([word for word, count in counts.items() if count >= 3])
+				if len(item) < 50:
+					if item in counts:
+						counts[item] += 1
+					else:
+						counts[item] = 1
+
+		frequents = [(word, count) for word, count in counts.items() if count > 1]
+		print(len(frequents), 'frequents')
+
+		frequents = [word for word, count in sorted(frequents, key=lambda item: item[1], reverse=True)]
 		print(*frequents, sep='\n', file=codecs.open(filename, 'w', 'utf8'))
-		return frequents
+		return set(frequents)
 
 
 if __name__ == '__main__':
