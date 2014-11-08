@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='baaz-search',
-	version='0.2',
+	version='0.3',
 	description='Baaz Search App',
 	author='Alireza Nourian',
 	author_email='az.nourian@gmail.com',

@@ -1,5 +1,0 @@
-#!/bin/bash
-cd $OPENSHIFT_DATA_DIR
-wget http://nournia.kd.io/informations_head.txt.gz
-mv informations_head.txt.gz informations.txt.gz
-cd $OPENSHIFT_REPO_DIR/wsgi/search/
