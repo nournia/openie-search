@@ -8,8 +8,8 @@ from hazm import word_tokenize, Lemmatizer
 from progress.bar import Bar
 
 
-resources = os.environ['OPENSHIFT_DATA_DIR']
-index_dir = os.path.join(resources,'index')
+resources = os.environ.get('OPENSHIFT_DATA_DIR', 'data')
+index_dir = os.path.join(resources, 'index')
 
 lemmatizer = Lemmatizer()
 def lemmatize(w): return lemmatizer.lemmatize(w.replace('_', ' '))
@@ -23,10 +23,11 @@ schema = Schema(
 
 def get_informations():
 	bar = Bar('Progress (100k)')
-	with gzip.open(os.path.join(resources,'informations.txt.gz'), 'r') as file:
+	with gzip.open(os.path.join(resources, 'informations.txt.gz'), 'r') as file:
 		sentence, informations = '', []
 		for i, line in enumerate(file):
-			if i and not i % 100000: bar.next()
+			if i and not i % 100000:
+				bar.next()
 			line = line.strip().decode('utf8')
 			if line.startswith('#'):
 				if informations:
@@ -41,11 +42,11 @@ def get_informations():
 
 
 def get_frequents():
-	filename = os.path.join(resources,'frequents.txt')
+	filename = os.path.join(resources, 'frequents.txt')
 	if os.path.isfile(filename):
 		frequents = set(codecs.open(filename, encoding='utf8').read().split('\n'))
 
-		filename = os.path.join(resources,'exceptions.txt')
+		filename = os.path.join(resources, 'exceptions.txt')
 		if os.path.isfile(filename):
 			for item in set(codecs.open(filename, encoding='utf8').read().split('\n')):
 				frequents.remove(item)

@@ -1,6 +1,6 @@
 
 from __future__ import unicode_literals
-import os, json
+import json
 from flask import Flask, request, abort
 from hazm import Normalizer
 from search import find_informations
@@ -9,12 +9,12 @@ from search import find_informations
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
-normalizer  = Normalizer()
+normalizer = Normalizer()
 
 
-@app.route('/search', methods = ['POST'])
+@app.route('/search', methods=['POST'])
 def search():
-	if not 'argument0' in request.form or not 'argument1' in request.form or not 'relation' in request.form:
+	if 'argument0' not in request.form or 'argument1' not in request.form or 'relation' not in request.form:
 		abort(400)
 
 	query = map(normalizer.normalize, (request.form['argument0'], request.form['argument1'], request.form['relation']))
